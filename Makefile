@@ -24,7 +24,26 @@ init-db:
 			   openhack/data-load:v1
 
 build-poi:
-	docker build -t poi:latest --file dockerfiles/Dockerfile_3 .
+	docker build -t poi:latest ./src/poi
+
+run-poi:
+	docker run --name poi \
+			   --network trip-net \
+			   -h poi \
+			   --rm \
+			   -p 8080:8080 \
+			   -d \
+			   --env "SQL_USER=SA" \
+    		   --env "SQL_PASSWORD=ThisIsADev123~" \
+    		   --env "SQL_SERVER=sqldev" \
+    		   --env "SQL_DBNAME=mydrivingDB" \
+			   --env "WEB_PORT=8080" \
+			   poi:latest
+
+stop-poi:
+	docker kill poi
+
+dev-poi: build-poi run-poi
 
 stop-db:
 	docker kill sqlserver
