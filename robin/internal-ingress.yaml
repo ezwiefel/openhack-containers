@@ -1,0 +1,6 @@
+controller:
+  service:
+    #loadBalancerIP: 192.168.0.71    
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: $AKS_LOADBALANCER_SUB_NET #change to your subnet  
