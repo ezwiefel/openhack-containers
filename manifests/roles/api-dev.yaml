@@ -1,0 +1,31 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-user-full-access
+  namespace: api
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["batch"]
+  resources:
+  - jobs
+  - cronjobs
+  verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: api-user-access
+  namespace: api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: api-user-full-access
+subjects:
+- kind: Group
+  namespace: api
+  name: c7dd48f5-1a18-4645-b6b9-1f0e09f24757
+- kind: Group
+  namespace: api
+  name: 8ee7750c-2362-412f-bba7-f8a026282002

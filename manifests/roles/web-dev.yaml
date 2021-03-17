@@ -1,0 +1,31 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fe-user-full-access
+  namespace: front-end
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["batch"]
+  resources:
+  - jobs
+  - cronjobs
+  verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fe-user-access
+  namespace: front-end
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: fe-user-full-access
+subjects:
+- kind: Group
+  namespace: front-end
+  name: c7dd48f5-1a18-4645-b6b9-1f0e09f24757
+- kind: Group
+  namespace: front-end
+  name: acae1ffc-960e-4517-b607-8febc28b546b
