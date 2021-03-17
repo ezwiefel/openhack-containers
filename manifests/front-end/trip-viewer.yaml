@@ -33,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gui
+  name: tripviewer
   namespace: front-end
 spec:
   selector:
@@ -42,20 +42,3 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: LoadBalancer
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: minimal-ingress
-# spec:
-#   rules:
-#   - http:
-#       paths:
-#       - path: /trip-viewer
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: gui
-#             port:
-#               number: 80

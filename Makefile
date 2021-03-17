@@ -116,3 +116,17 @@ network:
 	--source-ip 10.2.2.52 \
 	--vm internal-vm \
 	--nic internal-vmVMNic
+
+helm-csi:
+	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts/
+	helm install csi csi-secrets-store-provider-azure/csi-secrets-store-provider-azure -n csi
+
+
+# kubectl create secret generic secrets-store-creds --namespace api --from-literal clientid=36f96638-71ae-4ce1-9e3b-ef8002be812d --from-literal clientsecret=7o.yREQOMxb6F9_qyZ5qTxFKFIwVy_5fon
+
+# helm install nginx-ingress ingress-nginx/ingress-nginx \
+#     --namespace front-end \
+#     --set controller.replicaCount=2 \
+#     --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+#     --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+#     --set controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux
