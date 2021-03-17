@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tripviewer
+  namespace: front-end
+spec:
+  selector:
+    matchLabels:
+      app: tripviewer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tripviewer
+    spec:
+      containers:
+      - name: trip-viewer
+        image: registryois2716.azurecr.io/tripviewer:latest
+        ports:
+          - containerPort: 80
+        env:
+          - name: TRIPS_API_ENDPOINT
+            value: http://trip-service.api.svc.cluster.local
+          - name: USERPROFILE_API_ENDPOINT
+            value: http://user-profile.api.svc.cluster.local
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gui
+  namespace: front-end
+spec:
+  selector:
+    app: tripviewer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: minimal-ingress
+# spec:
+#   rules:
+#   - http:
+#       paths:
+#       - path: /trip-viewer
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: gui
+#             port:
+#               number: 80

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-java
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-java
+  template:
+    metadata:
+      labels:
+        app: user-java
+    spec:
+      containers:
+      - name: user-java
+        image: registryois2716.azurecr.io/user-java:latest
+        env:
+          - name: SQL_USER
+            value: sqladminoIs2716
+          - name: SQL_PASSWORD
+            value: iR8ld8Lc0
+          - name: SQL_SERVER
+            value: sqlserverois2716.database.windows.net
+          - name: SQL_DBNAME
+            value: mydrivingDB
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-java-service
+spec:
+  selector:
+    app: user-java
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

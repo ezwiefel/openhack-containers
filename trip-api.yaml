@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trips
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trips
+  template:
+    metadata:
+      labels:
+        app: trips
+    spec:
+      containers:
+      - name: trips
+        image: registryois2716.azurecr.io/trips:latest
+        env:
+          - name: SQL_USER
+            value: sqladminoIs2716
+          - name: SQL_PASSWORD
+            value: iR8ld8Lc0
+          - name: SQL_SERVER
+            value: sqlserverois2716.database.windows.net
+          - name: SQL_DBNAME
+            value: mydrivingDB
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-service
+spec:
+  selector:
+    app: trips
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
