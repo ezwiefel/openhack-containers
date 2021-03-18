@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: tripviewer
   namespace: front-end
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
 spec:
   selector:
     matchLabels:

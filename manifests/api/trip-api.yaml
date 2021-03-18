@@ -3,8 +3,11 @@ kind: Deployment
 metadata:
   name: trips
   namespace: api
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: trips
@@ -29,6 +32,8 @@ spec:
           - name: secrets-store-inline
             mountPath: "/secrets"
             readOnly: true
+        securityContext:
+          allowPrivilegeEscalation: false
       volumes:
         - name: secrets-store-inline
           csi:
@@ -36,8 +41,8 @@ spec:
             readOnly: true
             volumeAttributes:
               secretProviderClass: "azure-kvname"
-            nodePublishSecretRef:
-              name: secrets-store-creds
+            # nodePublishSecretRef:
+            #   name: secrets-store-creds
 ---
 apiVersion: v1
 kind: Service
