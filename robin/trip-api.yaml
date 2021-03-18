@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trips
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trips
+  template:
+    metadata:
+      labels:
+        app: trips
+    spec:
+      securityContext:
+         runAsUser: <2500>
+         fsGroup: <2000>
+
+      containers:
+      - name: trips
+        image: registryois2716.azurecr.io/trips:latest
+        env:
+          - name: SQL_DBNAME
+            value: mydrivingDB
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/secrets"
+            readOnly: true
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kvname"
+            nodePublishSecretRef:
+              name: secrets-store-creds
+      securityContext:
+          allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-service
+  namespace: api
+spec:
+  selector:
+    app: trips
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
